@@ -1,17 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useDispatch } from 'react-redux';
 import { IProduct } from '../store/modules/cart/types';
 import api from '../services/api';
-import { response } from 'express';
+import { addNewProduct } from '../store/modules/cart/actions';
 
 const Catalago = () => {    
+    const dispatch = useDispatch();
     const [catalog, setCatalog] = useState<IProduct[]>([]);
 
     useEffect(() => {
         api.get('products').then(response => {
             setCatalog(response.data);
         })
-    },[])
+    },[]);
+
+    const handleAddToCart = useCallback((produto: IProduct) => {
+        dispatch(addNewProduct(produto));
+    },[dispatch]);
 
     // const catalogo = useSelector(state => state);
     // const store = useStore();
@@ -22,11 +27,11 @@ const Catalago = () => {
         <>
             <h1>Catalago</h1>
             <div>
-                {catalog.map(item => (
-                    <article key={item.id}>
-                        <strong>{item.title}: </strong>
-                        <span>{item.price} </span>
-                        <button>Comprar</button>
+                {catalog.map(produto => (
+                    <article key={produto.id}>
+                        <strong>{produto.title}: </strong>
+                        <span>R${produto.price} </span>
+                        <button onClick={() =>handleAddToCart(produto)}>Comprar</button>
                     </article>
                 ))}
             </div>

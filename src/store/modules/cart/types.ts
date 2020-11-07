@@ -5,8 +5,8 @@ export interface IProduct{
 }
 
 export interface ICartItem{
-    produto: IProduct;
-    quantidade: number;
+    product: IProduct;
+    quantity: number;
 }
 
 export interface ICartState{
